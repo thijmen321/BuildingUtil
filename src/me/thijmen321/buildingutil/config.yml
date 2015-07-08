@@ -1,0 +1,19 @@
+########################################################################
+################		BuildingUtil Config File		################
+#########------------------------------------------------------#########
+################	Plugin by: thijmen321 & bramhaag	################
+########################################################################
+
+#Automatically place blocks in selected item slot in hotbar if the player has any left in his inventory when he runs out
+replace-blocks: true
+
+#List of blocks that aren't places in the player's inventory when he runs out (uncomment to enable)
+#banned-blocks:
+#  - bedrock
+
+#Automatically place tools in selected item slot in hotbar if the player has any left in his inventory when a tool breaks
+replace-tools: true
+
+#List of tools that aren't places in the player's inventory when they break (uncomment to enable)
+#banned-tools:
+#   - flint_and_steel

@@ -1,5 +1,14 @@
 package me.thijmen321.buildingutil;
 
-public class BuildingUtil {
+import org.bukkit.plugin.java.JavaPlugin;
 
+public class BuildingUtil extends JavaPlugin {
+
+	public void onEnable() {
+		this.saveDefaultConfig();
+	}
+	
+	public void onDisable() {
+		
+	}
 }
