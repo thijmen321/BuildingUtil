@@ -1,5 +1,19 @@
 name: BuildingUtil
-version: 0.0.1-PREALPHA
+version: 1.0.0.0
 main: me.thijmen321.buildingutil.BuildingUtil
 authors: [bramhaag, thijmen321]
 description: Provides utilities for building
+database: false
+permissions:
+  buildingutil.*
+    description: Gives the user access to all BuildingUtil permissions
+    children:
+        buildingutil.swap.block: true
+        buildingutil.swap.tool: true
+    default: op
+  buildingutil.swap.block:
+    description: Allows the user to auto-swap blocks
+    default: op
+  buildingutil.swap.tool:
+    description: Allows the user to auto-swap tools
+    default: op

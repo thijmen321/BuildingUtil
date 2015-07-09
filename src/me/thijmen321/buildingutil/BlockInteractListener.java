@@ -13,6 +13,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Copyright (C) 2015 Bram Hagens & Thijmen Kuipers
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 public class BlockInteractListener implements Listener
 {
 	private Plugin plugin;
@@ -25,41 +41,45 @@ public class BlockInteractListener implements Listener
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) 
 	{
-		Player p = e.getPlayer();
-		PlayerInventory inv = p.getInventory();
-
-		Material placed = e.getBlock().getType();
-
-		if(plugin.getConfig().contains("banned-blocks"))
+		if(plugin.getConfig().getBoolean("replace-blocks") || e.getPlayer().hasPermission("buildingutil.swap.block") || e.getPlayer().hasPermission("buildingutil.swap.tool"))
 		{
-			for(String s : plugin.getConfig().getStringList("banned-blocks"))
-				if(Material.valueOf(s.toUpperCase()).equals(placed)); return;
-		}
+			Player p = e.getPlayer();
+			PlayerInventory inv = p.getInventory();
 
+			Material placed = e.getBlock().getType();
 
-		if (p.getGameMode() != GameMode.CREATIVE && inv.getItemInHand().getAmount() == 1)
-			for (int i = 0; i < inv.getContents().length; i++)
+			//TODO Include in next version
+			/*if(plugin.getConfig().contains("banned-blocks"))
 			{
-				if (inv.getHeldItemSlot() == i) continue;
+				for(String s : plugin.getConfig().getStringList("banned-blocks"))
+					if(Material.valueOf(s.toUpperCase()).equals(placed)); return;
+			}*/
 
-				ItemStack item = inv.getItem(i);
-				if(item == null || item.getType() == null || item.getType().name() == null) continue;
 
-				if (item.getType() == placed)
+			if (p.getGameMode() != GameMode.CREATIVE && inv.getItemInHand().getAmount() == 1)
+				for (int i = 0; i < inv.getContents().length; i++)
 				{
-					inv.setItemInHand(item);
+					if (inv.getHeldItemSlot() == i) continue;
 
-					inv.clear(i);
+					ItemStack item = inv.getItem(i);
+					if(item == null || item.getType() == null || item.getType().name() == null) continue;
 
-					break;
+					if (item.getType() == placed)
+					{
+						inv.setItemInHand(item);
+
+						inv.clear(i);
+
+						break;
+					}
 				}
-			}
+		}
 	}
 
 	@EventHandler
 	public void onPlayerBlockInteract(PlayerInteractEvent e) 
 	{
-		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+		if(plugin.getConfig().getBoolean("replace-tools") || e.getPlayer().hasPermission("buildingutil.swap.tool") || e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 			PlayerInventory pi = e.getPlayer().getInventory();
 			Block b = e.getClickedBlock();
 			switch(b.getType())
@@ -161,13 +181,6 @@ public class BlockInteractListener implements Listener
 			case NETHER_BRICK:
 			case NETHER_FENCE:
 			case STONE_SLAB2:
-				/*case ANDESITE:					These are stone with a data value
-			case DARK_PRISMARINE:
-			case DIORITE:
-			case GRANITE:
-			case POLISHED_ANDERSITE:
-			case POLISHED_DIORITE:
-			case POLISHED_GRANITE:*/
 			case PRISMARINE:
 			case QUARTZ_BLOCK:
 			case QUARTZ_STAIRS:
@@ -229,11 +242,12 @@ public class BlockInteractListener implements Listener
 
 		if(materialInt  <= 0 || it == null) return;
 
-		if(plugin.getConfig().contains("banned-blocks"))
+		//TODO Include in next version
+		/*if(plugin.getConfig().contains("banned-blocks"))
 		{
 			for(String s : plugin.getConfig().getStringList("banned-tools"))
 				if(Material.valueOf(s.toUpperCase()).equals(it.getType())); return;
-		}
+		}*/
 
 		ItemStack backup = pi.getItem(slot);
 
