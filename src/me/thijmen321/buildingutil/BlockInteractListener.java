@@ -102,7 +102,8 @@ public class BlockInteractListener implements Listener
 			case FENCE:
 			case FENCE_GATE:
 			case WOOD_STAIRS:
-
+			case LOG:
+			case LOG_2:
 
 			case DARK_OAK_DOOR:
 			case DARK_OAK_FENCE:

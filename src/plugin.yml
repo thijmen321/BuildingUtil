@@ -5,7 +5,7 @@ authors: [bramhaag, thijmen321]
 description: Provides utilities for building
 database: false
 permissions:
-  buildingutil.*
+  buildingutil.*:
     description: Gives the user access to all BuildingUtil permissions
     children:
         buildingutil.swap.block: true
