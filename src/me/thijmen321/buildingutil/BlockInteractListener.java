@@ -199,6 +199,12 @@ public class BlockInteractListener implements Listener
 	private void getTool(PlayerInventory pi, ToolEnum tool, int slot) 
 	{
 		if(((Player)pi.getHolder()).getGameMode() == GameMode.CREATIVE) return;
+
+		if(pi.getItem(slot) != null && 
+				!pi.getItem(slot).equals(Material.AIR) && 
+				pi.getItem(slot).getType().name().contains("_") && 
+				pi.getItem(slot).getType().name().split("_")[1].equals(tool)) return;
+
 		int materialInt = 0, backupSlot = 0;
 		ItemStack it = null;
 
