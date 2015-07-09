@@ -16,12 +16,12 @@ import org.bukkit.plugin.Plugin;
 public class BlockInteractListener implements Listener
 {
 	private Plugin plugin;
-	
+
 	public BlockInteractListener(Plugin plugin)
 	{
 		this.plugin = plugin;
 	}
-	
+
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) 
 	{
@@ -29,22 +29,22 @@ public class BlockInteractListener implements Listener
 		PlayerInventory inv = p.getInventory();
 
 		Material placed = e.getBlock().getType();
-		
+
 		if(plugin.getConfig().contains("banned-blocks"))
 		{
 			for(String s : plugin.getConfig().getStringList("banned-blocks"))
 				if(Material.valueOf(s).equals(placed)); return;
 		}
-			
-		
+
+
 		if (p.getGameMode() != GameMode.CREATIVE && inv.getItemInHand().getAmount() == 1)
 			for (int i = 0; i < inv.getContents().length; i++)
 			{
 				if (inv.getHeldItemSlot() == i) continue;
-				
+
 				ItemStack item = inv.getItem(i);
 				if(item == null || item.getType() == null || item.getType().name() == null) continue;
-				
+
 				if (item.getType() == placed)
 				{
 					inv.setItemInHand(item);
@@ -56,7 +56,6 @@ public class BlockInteractListener implements Listener
 			}
 	}
 
-	//TODO(Thijmen) add more items
 	@EventHandler
 	public void onPlayerBlockInteract(PlayerInteractEvent e) 
 	{
@@ -80,7 +79,10 @@ public class BlockInteractListener implements Listener
 
 			case WOOD:
 			case WOODEN_DOOR:
+			case FENCE:
+			case FENCE_GATE:
 			case WOOD_STAIRS:
+
 
 			case DARK_OAK_DOOR:
 			case DARK_OAK_FENCE:
@@ -93,19 +95,20 @@ public class BlockInteractListener implements Listener
 			case JUKEBOX:
 			case DAYLIGHT_DETECTOR:
 			case DAYLIGHT_DETECTOR_INVERTED:
-			case NOTE_BLOCK:	
+			case NOTE_BLOCK:
+			case HUGE_MUSHROOM_1:
+			case HUGE_MUSHROOM_2:
 			case VINE:
 			case SIGN:
 			case COCOA: 
 				getTool(pi, ToolEnum.AXE, pi.getHeldItemSlot());
 				break;
-			//TODO Oak wood, Dark wood items are missing! Crafting Table, Jack o'Lantern & Huge Mushrooms are missing
 
-			/*
-			 * SHOVEL
-			 */
+				/*
+				 * SHOVEL
+				 */
 			case CLAY:
-			case SOIL: //Farmland
+			case SOIL:
 			case GRASS:
 			case GRAVEL:
 			case MYCEL:
@@ -116,8 +119,72 @@ public class BlockInteractListener implements Listener
 				getTool(pi, ToolEnum.SPADE, pi.getHeldItemSlot());
 				break;
 
+				/*
+				 * PICKAXE
+				 */
+			case OBSIDIAN:
+			case ENDER_CHEST:
+			case ANVIL:
+			case COAL_BLOCK:
+			case DIAMOND_BLOCK:
+			case EMERALD_BLOCK:
+			case IRON_BLOCK:
+			case REDSTONE_BLOCK:
+			case ENCHANTMENT_TABLE:
+			case IRON_BARDING://?
+			case IRON_DOOR:
+			case MOB_SPAWNER:
+			case DISPENSER:
+			case DROPPER:
+			case FURNACE:
+			case GOLD_BLOCK:
+			case COAL_ORE:
+			case DIAMOND_ORE:
+			case EMERALD_ORE:
+			case ENDER_STONE:
+			case GOLD_ORE:
+			case HOPPER:
+			case IRON_ORE:
+			case IRON_TRAPDOOR:
+			case LAPIS_BLOCK:
+			case LAPIS_ORE:
+			case QUARTZ_ORE:
+			case REDSTONE_ORE:
+			case BRICK_STAIRS:
+			case BRICK:
+			case CAULDRON:
+			case COBBLESTONE:
+			case COBBLESTONE_STAIRS:
+			case COBBLE_WALL:
+			case MOSSY_COBBLESTONE:
+			case NETHER_BRICK:
+			case NETHER_FENCE:
+			case STONE_SLAB2:
+				/*case ANDESITE:					These are stone with a data value
+			case DARK_PRISMARINE:
+			case DIORITE:
+			case GRANITE:
+			case POLISHED_ANDERSITE:
+			case POLISHED_DIORITE:
+			case POLISHED_GRANITE:*/
+			case PRISMARINE:
+			case QUARTZ_BLOCK:
+			case QUARTZ_STAIRS:
+			case SANDSTONE:
+			case SANDSTONE_STAIRS:
+			case RAILS:
+			case BREWING_STAND:
+			case ICE:
+			case PACKED_ICE:
+			case STONE_PLATE:
+			case IRON_PLATE:
+			case GOLD_PLATE:
+			case NETHERRACK:
+				getTool(pi, ToolEnum.PICKAXE, pi.getHeldItemSlot());
+				break;
+
 			default: 
-				return;
+				break;
 			}
 		}
 	}
@@ -131,6 +198,7 @@ public class BlockInteractListener implements Listener
 	 */
 	private void getTool(PlayerInventory pi, ToolEnum tool, int slot) 
 	{
+		if(((Player)pi.getHolder()).getGameMode() == GameMode.CREATIVE) return;
 		int materialInt = 0, backupSlot = 0;
 		ItemStack it = null;
 
@@ -153,7 +221,7 @@ public class BlockInteractListener implements Listener
 		}
 
 		if(materialInt  <= 0 || it == null) return;
-		
+
 		if(plugin.getConfig().contains("banned-blocks"))
 		{
 			for(String s : plugin.getConfig().getStringList("banned-tools"))
