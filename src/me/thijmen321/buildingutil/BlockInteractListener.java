@@ -2,12 +2,12 @@ package me.thijmen321.buildingutil;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -58,11 +58,11 @@ public class BlockInteractListener implements Listener
 		}
 	}
 	
-	//@EventHandler
+	@EventHandler
 	public void onPlayerBlockInteract(PlayerInteractEvent e) {
 
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-			Player p = e.getPlayer();
+			PlayerInventory pi = e.getPlayer().getInventory();
 			Block b = e.getClickedBlock();
 			switch(b.getType())
 			{
@@ -78,6 +78,15 @@ public class BlockInteractListener implements Listener
 				case BIRCH_FENCE:
 				case BIRCH_FENCE_GATE:
 				case BIRCH_WOOD_STAIRS:
+					
+				case WOOD:
+				case WOODEN_DOOR:
+				case WOOD_STAIRS:
+					
+				case DARK_OAK_DOOR:
+				case DARK_OAK_FENCE:
+				case DARK_OAK_FENCE_GATE:
+				case DARK_OAK_STAIRS:
 	
 				case BOOKSHELF:
 				case CHEST:
@@ -88,7 +97,7 @@ public class BlockInteractListener implements Listener
 				case NOTE_BLOCK:	
 				case VINE:
 				case SIGN:
-				case COCOA: getTool(p, ToolEnum.AXE, p.getInventory().getHeldItemSlot());
+				case COCOA: getTool(pi, ToolEnum.AXE, pi.getHeldItemSlot());
 					//TODO Oak wood, Dark wood items are missing! Crafting Table, Jack o'Lantern & Huge Mushrooms are missing
 	
 				/*
@@ -102,22 +111,25 @@ public class BlockInteractListener implements Listener
 				case DIRT:
 				case SAND:
 				case SOUL_SAND:
-				case SNOW: getTool(p, ToolEnum.SHOVEL, p.getInventory().getHeldItemSlot());
+				case SNOW: getTool(pi, ToolEnum.SPADE, pi.getHeldItemSlot());
 	
 				default: return;
 			}
 		}
 	}
 
-	private void getTool(Player p, ToolEnum tool, int slot) {
+	private void getTool(Inventory pi, ToolEnum tool, int slot) {
 
 		int materialInt = 0, backupSlot = 0;
 		ItemStack it = null;
 
-		for(int in = 0; in < p.getInventory().getContents().length; in++)
+		for(int in = 0; in < pi.getContents().length; in++)
 		{
-			ItemStack i = p.getInventory().getContents()[in];
+			ItemStack i = pi.getContents()[in];
+			if(i.getType().name() == null) return;
+			
 			String name = i.getType().name();
+
 			if(name.contains("_") && name.split("_")[1].equals(tool.name())) {
 				int temp = MaterialEnum.valueOf(name.split("_")[0]).getValue();
 				if(temp > materialInt) {
@@ -129,14 +141,14 @@ public class BlockInteractListener implements Listener
 			else continue;
 		}
 
-		if(!(materialInt > 0) || it == null) return;
+		if(materialInt  <= 0 || it == null) return;
 
-		ItemStack backup = p.getInventory().getItem(slot);
+		ItemStack backup = pi.getItem(slot);
 
-		p.getInventory().remove(it);
-		p.getInventory().clear(slot);
-		p.getInventory().setItem(slot, new ItemStack(Material.valueOf(MaterialEnum.findByValue(materialInt).name() + "_" + tool.name())));
-		p.getInventory().setItem(backupSlot, backup);
+		pi.remove(it);
+		pi.clear(slot);
+		pi.setItem(slot, new ItemStack(Material.valueOf(MaterialEnum.findByValue(materialInt).name() + "_" + tool.name())));
+		pi.setItem(backupSlot, backup);
 
 	}
 
