@@ -7,8 +7,9 @@ public class BuildingUtil extends JavaPlugin
 
 	public void onEnable() 
 	{
+		this.getServer().getPluginManager().registerEvents(new BlockInteractListener(this), this);
+
 		this.saveDefaultConfig();
-		this.getServer().getPluginManager().registerEvents(new BlockInteractListener(), this);
 	}
 	
 	public void onDisable() 
