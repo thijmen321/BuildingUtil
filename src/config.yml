@@ -16,4 +16,4 @@ replace-tools: true
 
 #List of tools that aren't places in the player's inventory when they break (uncomment to enable)
 #banned-tools:
-#   - flint_and_steel
+#   - 

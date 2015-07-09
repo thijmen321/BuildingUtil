@@ -33,7 +33,7 @@ public class BlockInteractListener implements Listener
 		if(plugin.getConfig().contains("banned-blocks"))
 		{
 			for(String s : plugin.getConfig().getStringList("banned-blocks"))
-				if(Material.valueOf(s).equals(placed)); return;
+				if(Material.valueOf(s.toUpperCase()).equals(placed)); return;
 		}
 
 
@@ -122,6 +122,7 @@ public class BlockInteractListener implements Listener
 				/*
 				 * PICKAXE
 				 */
+			case STONE: 
 			case OBSIDIAN:
 			case ENDER_CHEST:
 			case ANVIL:
@@ -198,12 +199,12 @@ public class BlockInteractListener implements Listener
 	 */
 	private void getTool(PlayerInventory pi, ToolEnum tool, int slot) 
 	{
-		if(((Player)pi.getHolder()).getGameMode() == GameMode.CREATIVE) return;
+		if(((Player)pi.getHolder()).getGameMode().equals(GameMode.CREATIVE)) return;
 
 		if(pi.getItem(slot) != null && 
 				!pi.getItem(slot).equals(Material.AIR) && 
 				pi.getItem(slot).getType().name().contains("_") && 
-				pi.getItem(slot).getType().name().split("_")[1].equals(tool)) return;
+				pi.getItem(slot).getType().name().split("_")[1].equals(tool.name())) return;
 
 		int materialInt = 0, backupSlot = 0;
 		ItemStack it = null;
@@ -231,7 +232,7 @@ public class BlockInteractListener implements Listener
 		if(plugin.getConfig().contains("banned-blocks"))
 		{
 			for(String s : plugin.getConfig().getStringList("banned-tools"))
-				if(Material.valueOf(s).equals(it)); return;
+				if(Material.valueOf(s.toUpperCase()).equals(it.getType())); return;
 		}
 
 		ItemStack backup = pi.getItem(slot);
