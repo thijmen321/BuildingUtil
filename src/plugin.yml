@@ -1,0 +1,5 @@
+name: BuildingUtil
+version: 0.0.1-PREALPHA
+main: me.thijmen321.buildingutil.BuildingUtil
+authors: [bramhaag, thijmen321]
+description: Provides utilities for building

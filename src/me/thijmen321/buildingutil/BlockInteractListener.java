@@ -6,15 +6,59 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
-public class BlockInteractListener implements Listener {
-
-	/*
-	 * TODO(Thijmen) Replace player variable `p` with the players inventory
-	 */
+public class BlockInteractListener implements Listener
+{
 	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent e)
+	{
+		PlayerInventory inv = e.getPlayer().getInventory();
+		
+		Material placed = e.getBlock().getType();
+		
+		if (inv.getItemInHand().getAmount() == 1)// == null || inv.getItemInHand().getType() == Material.AIR)
+		{
+			e.getPlayer().sendMessage("1");
+			
+			
+			if (inv.contains(placed))
+			{
+				e.getPlayer().sendMessage("2");
+				
+				
+				for (int i = 0; i < inv.getContents().length; i++)
+				{
+					ItemStack item = inv.getItem(i);
+					
+					if (item.getType() == placed)
+					{
+						inv.setItemInHand(item);
+						
+						inv.clear(i);
+						
+						e.getPlayer().sendMessage("3");
+						
+						continue;
+					}						
+				}
+				
+			
+				//int sourceSlot = 9;
+				
+				//inv.setItemInHand(inv.getItem(sourceSlot));
+				
+				//inv.clear(sourceSlot);
+				
+				//e.getPlayer().sendMessage("3");
+			}
+		}
+	}
+	
+	//@EventHandler
 	public void onPlayerBlockInteract(PlayerInteractEvent e) {
 
 		if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
@@ -95,4 +139,5 @@ public class BlockInteractListener implements Listener {
 		p.getInventory().setItem(backupSlot, backup);
 
 	}
+
 }
